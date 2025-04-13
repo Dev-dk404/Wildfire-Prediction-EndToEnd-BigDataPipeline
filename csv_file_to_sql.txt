@@ -1,32 +1,62 @@
+# first clean the data, or convert to csv file
+
+df = pd.read_excel("StructuredFinal.xlsx")
+df = df.replace('', pd.NA)# Replace empty strings with NaN
+df = df.drop_duplicates()
+df.to_csv("structured_final.csv", index=False, na_rep='\\N')
+
 Copy csv file into mysql-container
- docker cp US_wildfire_weather_data.csv mysql-container:/var/lib/mysql-files/
+ docker cp structured_final.csv mysql-container:/var/lib/mysql-files/
 
 Then go inside mysql-container
  docker exec -it mysql-container mysql -u root -p
 
 create a table inside a database
 
-CREATE TABLE weather_data (
-    temp_mean_0 FLOAT,
-    prcp_sum_0 FLOAT,
-    wspd_mean_0 FLOAT,
-    temp_mean_10 FLOAT,
-    prcp_sum_10 FLOAT,
-    wspd_mean_10 FLOAT,
-    temp_mean_30 FLOAT,
-    prcp_sum_30 FLOAT,
-    wspd_mean_20 FLOAT,
-    temp_mean_60 FLOAT,
-    prcp_sum_60 FLOAT,
-    wspd_mean_60 FLOAT,
-    temp_mean_180 FLOAT,
-    prcp_sum_180 FLOAT,
-    wspd_mean_180 FLOAT,
-    OBJECTID INT PRIMARY KEY
+CREATE TABLE wildfire_data (
+    latitude DOUBLE,
+    longitude DOUBLE,
+    Temp_pre_30 DOUBLE,
+    Temp_pre_15 DOUBLE,
+    Temp_pre_7 DOUBLE,
+    Temp_cont DOUBLE,
+    Wind_pre_30 DOUBLE,
+    Wind_pre_15 DOUBLE,
+    Wind_pre_7 DOUBLE,
+    Wind_cont DOUBLE,
+    Hum_pre_30 DOUBLE,
+    Hum_pre_15 DOUBLE,
+    Hum_pre_7 DOUBLE,
+    Hum_cont DOUBLE,
+    Prec_pre_30 DOUBLE,
+    Prec_pre_15 DOUBLE,
+    Prec_pre_7 DOUBLE,
+    Prec_cont DOUBLE,
+    fire_size DOUBLE,
+    state VARCHAR(50),
+    discovery_month VARCHAR(20),
+    putout_time VARCHAR(50),
+    disc_pre_year INT,
+    disc_pre_month VARCHAR(20),
+    stat_cause_descr VARCHAR(100),
+    row_id INT,
+    fire_name VARCHAR(100),
+    fire_size_class CHAR(1),
+    disc_clean_date DATE,
+    cont_clean_date DATE,
+    wstation_usaf VARCHAR(20)
 );
 
 LOAD DATA INFILE '/var/lib/mysql-files/yourfile.csv'
 INTO TABLE weather_data
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+
+LOAD DATA INFILE '/var/lib/mysql-files/structured_final.csv'
+INTO TABLE wildfire_data
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' 
 LINES TERMINATED BY '\n'
