@@ -1,0 +1,36 @@
+Copy csv file into mysql-container
+ docker cp US_wildfire_weather_data.csv mysql-container:/var/lib/mysql-files/
+
+Then go inside mysql-container
+ docker exec -it mysql-container mysql -u root -p
+
+create a table inside a database
+
+CREATE TABLE weather_data (
+    temp_mean_0 FLOAT,
+    prcp_sum_0 FLOAT,
+    wspd_mean_0 FLOAT,
+    temp_mean_10 FLOAT,
+    prcp_sum_10 FLOAT,
+    wspd_mean_10 FLOAT,
+    temp_mean_30 FLOAT,
+    prcp_sum_30 FLOAT,
+    wspd_mean_20 FLOAT,
+    temp_mean_60 FLOAT,
+    prcp_sum_60 FLOAT,
+    wspd_mean_60 FLOAT,
+    temp_mean_180 FLOAT,
+    prcp_sum_180 FLOAT,
+    wspd_mean_180 FLOAT,
+    OBJECTID INT PRIMARY KEY
+);
+
+LOAD DATA INFILE '/var/lib/mysql-files/yourfile.csv'
+INTO TABLE weather_data
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+
+

@@ -1,0 +1,68 @@
+Step 1:
+
+Install MySQL container using following command
+
+docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=dev -v my_shared_volume:/shared_data:rw --network myNetwork mysql:latest
+
+Here shared volume is mounted inside MySQL container's shared_data folder. Root Password is dev.
+
+Step 2:
+
+Move or copy the sql database into a new folder inside shared volume. 
+
+Script to inspect shared volume files:
+docker volume inspect my_shared_volume
+
+Look at the mount point and get that address
+
+To view files you can use:
+sudo ls /var/lib/docker/volumes/my_shared_volume/_data
+
+To make a new directory in the shared volume use:
+sudo mkdir /var/lib/docker/volumes/my_shared_volume/_data/mysql-data
+
+To copy sql file to shared volume use:
+sudo cp location/of/sql/file.sql /var/lib/docker/volumes/my_shared_volume/_data/mysql-data
+
+Now the sql file is inside the shared folder and can also be access inside mysql container inside shared_data folder. To check if the sql file is inside container use:
+
+docker exec mysql-container ls /shared_data/mysql_data
+
+
+Step 3:
+
+Create a new database inside MySQL container (make sure MySQL container is up and running).
+
+docker exec -it mysql-container mysql -u root -p
+
+Inside MySQL shell:
+CREATE DATABASE test_db;
+exit;
+
+Step 4:
+
+Execute the SQL file inside the database we just created inside the container.
+
+Use cat to read the file and pipe it into the MySQL.
+
+sudo docker exec -i mysql-container bash -c "cat /shared_data/mysql_data/data.sql" | sudo docker exec -i mysql-container mysql -u root -pdev test_db
+
+Step 5:
+Enter inside the container using
+
+docker exec -it mysql-container mysql -u root -p
+
+Inside the container:
+
+show databases:
+
+You should see test_db there.
+
+Use test_db;
+Show tables;
+
+This should show list of tables of the database.
+
+
+
+
