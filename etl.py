@@ -2,10 +2,6 @@ import pandas as pd
 import mysql.connector
 from cassandra.cluster import Cluster
 from cassandra.util import Date
-from joblib import Memory
-
-# Setup joblib cache directory
-memory = Memory("cache_dir", verbose=1)
 
 # Cassandra Connection
 def connect_to_cassandra():
@@ -40,7 +36,7 @@ def fetch_mysql_data(conn):
     return df
 
 # ETL Function
-@memory.cache
+
 def etl(mysql_df, cassandra_df):
     mysql_df['month'] = mysql_df['disc_clean_date'].dt.month
     mysql_df['year'] = mysql_df['disc_clean_date'].dt.year
@@ -59,8 +55,8 @@ def main():
     cassandra_session = connect_to_cassandra()
     mysql_conn = connect_to_mysql()
 
-    cassandra_df = fetch_cassandra_data(cassandra_session).head(50000)
-    mysql_df = fetch_mysql_data(mysql_conn).head(50000)
+    cassandra_df = fetch_cassandra_data(cassandra_session).head(1000)
+    mysql_df = fetch_mysql_data(mysql_conn).head(1000)
 
     merged_data = etl(mysql_df, cassandra_df)
     print(merged_data.head())
