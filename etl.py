@@ -63,7 +63,7 @@ def main():
 
     # Perform ETL
     merged_data = perform_etl(cassandra_df, mysql_df)
-    print(merged_data.head())
+    print(len(merged_data))
 
     # save merged data to csv
     merged_data.to_csv('merged_output.csv', index=False)  
