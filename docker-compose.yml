@@ -146,6 +146,46 @@ services:
     volumes:
       - hdfs_namenode_data:/hadoop/dfs/name   # store HDFS metadata properly
       
+  spark-master:
+    image: bitnami/spark:3.3.1
+    container_name: spark-container
+    ports:
+      - "8082:8080"   # Spark Master UI (was 8080, now 8082 to avoid Kafka conflict)
+      - "7077:7077"   # Spark cluster communication
+    volumes:
+      - .:/app
+    networks:
+      - myNetwork
+    environment:
+      - SPARK_MODE=master
+
+  spark-worker:
+    image: bitnami/spark:3.3.1
+    container_name: spark-worker
+    depends_on:
+      - spark-master
+    volumes:
+      - .:/app
+    networks:
+      - myNetwork
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-container:7077
+    ports:
+      - "8081:8081"  # Spark Worker UI
+
+  jupyter-pyspark:
+    image: jupyter/pyspark-notebook
+    container_name: jupyter-pyspark
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    networks:
+      - myNetwork
+    depends_on:
+      - spark-master
+      - spark-worker   
 
 volumes:
   hdfs_namenode_data:
