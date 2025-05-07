@@ -4,7 +4,7 @@ import pandas as pd
 # Connect to HDFS via WebHDFS
 client = InsecureClient('http://hdfs-container:50070', user='root')  # use 'hdfs-container' because of Docker network
 
-local_path = './final_merged_data.csv'
+local_path = './merged_output.csv'
 
 # Upload local file to HDFS
 hdfs_path = '/cleaned/final_merged_data.csv'

@@ -55,9 +55,15 @@ cd Wildfire-Prediction-EndToEnd-BigDataPipeline
 ```
 
 ### 2. Start all services
-
+Before starting all services, we need to create two separate volumes that could be mounted on HDFS namenode and datanote containers. 
+```bash
+docker volume create hdfs_namenode_data
+docker volume create hdfs_datanode_data
+```
+After creating those volumes, start all the containers and check the status after they are started.
 ```bash
 docker compose up -d
+docker compose ps
 ```
 
 This will start:
@@ -68,11 +74,25 @@ This will start:
 - HDFS Namenode and Datanode
 - Python
 
+To stop and start containers
+```bash
+docker compose stop
+docker compose start
+```
+Note: Performing docker compose down might delete all the data stored in MySQL, Cassandra and HDFS. 
+
 ### 3. Stream data
-Download the data from the Dataset link provided on the above link. 
-- Run the **Kafka producer** to send Excel/CSV data (structured_final.csv) into MySQL
+Download the data from the Dataset link provided on the above link.
+- Run requirements.txt file to install essential python packages needed to run our environment.
+
+```bash
+docker exec -it python-service bash
+pip install -r requirements.txt
+```
+
+- Run the **Kafka producer** to send Excel/CSV data (structured_final.csv) into MySQL.
 - Run the **Kafka producer** to send TXT data (fire_data.txt) into Cassandra.
-- Run all these files in 4 separate terminals (2 producers and 2 consumers) as it takes some time to produce kafka topics and consume them.
+- Run all these files in 4 separate python bash terminals (2 producers and 2 consumers) as it takes some time to produce kafka topics and consume them.
 
 ```bash
 docker exec -it python-service bash
@@ -121,14 +141,17 @@ This allows you to verify that Kafka producers and consumers are working correct
 
 
 ### 5. Perform ETL
+ETL script is present on etl.py file. We run that file inside python container.
 
 ```bash
+docker exec -it python-service bash
 python etl.py
 ```
 
 This will output `merged_output.csv`, now upload it to HDFS at `/cleaned/merged_output.csv`.
 
 ```bash
+docker exec -it python-service bash
 python hdfs_connection.py
 ```
 Hadoop UI is accessible at localhost, port 50070 where we can view the datanodes. Data can viewed inside Utilities/Browse the file system.
@@ -157,9 +180,9 @@ Load `Final_Model.ipynb` and run PySpark against HDFS.
 ---
 
 ## 👨‍💻 Author
-Devendra Adhikari
-Srajan Jainn
-Ritesh Janga
+Devendra Adhikari,
+Srajan Jain,
+Ritesh Janga,
 Hermela Dessie
 
 
