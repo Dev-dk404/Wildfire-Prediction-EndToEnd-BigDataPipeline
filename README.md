@@ -33,6 +33,11 @@ This repository contains a complete Docker-based big data pipeline for ingesting
    - Enables analysis, model training, and visualization
 
 ---
+## 🗺️ Architecture Diagram
+
+![Architecture](images/architecture_diagram.png)
+
+---
 
 ## 🧰 Prerequisites
 
@@ -176,6 +181,12 @@ http://CONTAINERIPADDRESS:8888
 
 You should see the Jupyter Notebook interface. Use this to run the Spark MLlib code. 
 Load `Final_Model.ipynb` and run PySpark against HDFS.
+
+---
+
+## 📱 Access Presentation File
+
+![QR Code](images/presentation_link.png)
 
 ---
 
