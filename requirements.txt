@@ -6,3 +6,11 @@ openpyxl
 joblib
 hdfs
 requests
+numpy
+scikit-learn
+matplotlib
+seaborn
+plotly
+streamlit
+xgboost
+statsmodels
