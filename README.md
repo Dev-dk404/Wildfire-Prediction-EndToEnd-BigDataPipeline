@@ -182,8 +182,34 @@ http://CONTAINERIPADDRESS:8888
 You should see the Jupyter Notebook interface. Use this to run the Spark MLlib code. 
 Load `Final_Model.ipynb` and run PySpark against HDFS.
 
----
+### 📊 This process will:
+- Load and process the merged wildfire dataset from HDFS.
+- Train a classification model (e.g., Random Forest).
+- Forecast future wildfire trends using ARIMA.
+- Export prediction outputs such as:
+  - `merged_output.csv`
+  - `future_wildfire_forecast.csv`
+- Save interactive HTML visualizations needed for the Streamlit dashboard.
 
+
+## 🌐 Running the Streamlit Dashboard
+ 
+### 1. Create a New Python File
+- In the Jupyter interface, create a new python file called `UI.py`
+- Paste the Streamlit code, `UI.py` from github to that file.
+
+### 2. Open a New Terminal
+- In Jupyter, click on **New → Terminal**
+ 
+### 3. Run the Streamlit App
+Navigate to the directory containing `UI.py` and run:
+```bash
+streamlit run UI.py
+```
+
+This should read the generated CSV and HTML files and render interactive visualizations
+
+---
 ## 📱 Access Presentation File
 
 ![QR Code](images/presentation_link.png)
